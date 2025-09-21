@@ -602,13 +602,21 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="teamEmail">Team Email Address <span class="required">*</span></label>
+                    <input type="email" id="teamEmail" name="teamEmail" placeholder="team@example.com (for confirmation and updates)" required>
+                    <small style="color: #7B0323; font-size: 0.85em; margin-top: 5px; display: block;">
+                        📧 This email will receive confirmation and all future communications about your submission
+                    </small>
+                </div>
+
+                <div class="form-group">
                     <label for="projectTitle">Project Title <span class="required">*</span></label>
                     <input type="text" id="projectTitle" name="projectTitle" required>
                 </div>
 
                 <div class="form-group">
                     <label for="projectBackground">Project Background <span class="required">*</span></label>
-                    <textarea id="projectBackground" name="projectBackground" placeholder="Clearly describe the background and context of your project..." required></textarea>
+                    <textarea id="projectBackground" name="projectBackground" placeholder="Describe the background and context of your project..." required></textarea>
                 </div>
 
                 <div class="form-group">
@@ -759,8 +767,19 @@
             const formData = new FormData(form);
             const errors = [];
             
+            // Check all required fields
             if (!formData.get('teamName') || formData.get('teamName').trim() === '') {
                 errors.push('Team Name');
+            }
+
+            if (!formData.get('teamEmail') || formData.get('teamEmail').trim() === '') {
+                errors.push('Team Email Address');
+            } else {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(formData.get('teamEmail').trim())) {
+                    errors.push('Team Email Address (must be a valid email format)');
+                }
             }
             
             if (!formData.get('projectTitle') || formData.get('projectTitle').trim() === '') {
@@ -775,17 +794,20 @@
                 errors.push('Problem Statement');
             }
 
+            // Check if at least one SDG is selected
             const selectedSDGs = formData.getAll('unsdgGoals');
             if (selectedSDGs.length === 0) {
                 errors.push('UN Sustainable Development Goals (select at least one)');
             }
 
+            // Check team members
             const teamMembers = formData.getAll('teamMember');
             const validMembers = teamMembers.filter(member => member && member.trim() !== '');
             if (validMembers.length === 0) {
                 errors.push('Team Members (at least one member required)');
             }
 
+            // Validate YouTube URL
             const youtubeUrl = formData.get('youtubeLink');
             if (!youtubeUrl || youtubeUrl.trim() === '') {
                 errors.push('YouTube Link');
@@ -793,6 +815,7 @@
                 errors.push('YouTube Link (must be a valid YouTube URL)');
             }
 
+            // Validate GitHub URL
             const githubUrl = formData.get('githubRepo');
             if (!githubUrl || githubUrl.trim() === '') {
                 errors.push('GitHub Repository');
@@ -800,6 +823,7 @@
                 errors.push('GitHub Repository (must be a valid GitHub URL)');
             }
 
+            // Display errors if any
             const errorMessage = document.getElementById('errorMessage');
             const errorList = document.getElementById('errorList');
             
@@ -853,59 +877,113 @@ For inquiries: cosaku10@gmail.com
             
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
+            const errorList = document.getElementById('errorList');
             
+            // Hide previous messages
             successMessage.style.display = 'none';
             errorMessage.style.display = 'none';
-
-            if (!validateForm()) {
-                errorMessage.style.display = 'block';
-                errorMessage.scrollIntoView({ behavior: 'smooth' });
-                return;
-            }
 
             const submitBtn = document.querySelector('.submit-btn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
             const formData = new FormData(this);
-            const emailBody = createEmailBody(formData);
+            
+            // Prepare data for backend
+            const submissionData = {
+                teamName: formData.get('teamName'),
+                teamEmail: formData.get('teamEmail'),
+                projectTitle: formData.get('projectTitle'),
+                projectBackground: formData.get('projectBackground'),
+                problemStatement: formData.get('problemStatement'),
+                unsdgGoals: formData.getAll('unsdgGoals'),
+                teamMembers: formData.getAll('teamMember').filter(member => member.trim() !== ''),
+                youtubeLink: formData.get('youtubeLink'),
+                githubRepo: formData.get('githubRepo')
+            };
 
-            setTimeout(() => {
-                // Creatngg mailto link for fallback
-                const subject = encodeURIComponent(`MVP Submission - ${formData.get('teamName')} - ${formData.get('projectTitle')}`);
-                const body = encodeURIComponent(emailBody);
-                const mailtoLink = `mailto:cosaku10@gmail.com?subject=${subject}&body=${body}`;
-                
-                window.location.href = mailtoLink;
-                
-                successMessage.style.display = 'block';
-                successMessage.scrollIntoView({ behavior: 'smooth' });
-                
-                this.reset();
-                
-                memberCount = 1;
-                const container = document.getElementById('teamMembersContainer');
-                container.innerHTML = `
-                    <div class="team-member">
-                        <input type="text" name="teamMember" placeholder="Enter team member name" required>
-                        <button type="button" class="remove-member" onclick="removeMember(this)">Remove</button>
-                    </div>
-                `;
-                updateMemberCount();
-                
+            // Submit to backend
+            fetch('http://localhost:3000/submit-mvp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(submissionData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message with submission details
+                    successMessage.innerHTML = `
+                        <strong>🎉 Submission Successful!</strong><br>
+                        Your MVP has been submitted to FOCLIS successfully!<br><br>
+                        <strong>📋 Submission Details:</strong><br>
+                        • Project: ${data.projectTitle}<br>
+                        • Team: ${data.teamName}<br>
+                        • Team Email: ${submissionData.teamEmail}<br>
+                        • Submission ID: ${data.submissionId}<br>
+                        • Date: ${data.submissionDate}<br><br>
+                        <strong>📧 What happens next?</strong><br>
+                        • Confirmation email sent to: <strong>${submissionData.teamEmail}</strong><br>
+                        • Our team will review your submission within 5-7 days<br>
+                        • All updates will be sent to your team email<br><br>
+                        <strong>FOCLIS - Faculty of Computing and Library Information Science, Kabale University</strong><br>
+                        <strong>For inquiries:</strong> cosaku10@gmail.com
+                    `;
+                    successMessage.style.display = 'block';
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Reset form
+                    this.reset();
+                    
+                    // Reset team members to default
+                    memberCount = 1;
+                    const container = document.getElementById('teamMembersContainer');
+                    container.innerHTML = `
+                        <div class="team-member">
+                            <input type="text" name="teamMember" placeholder="Enter team member name" required>
+                            <button type="button" class="remove-member" onclick="removeMember(this)">Remove</button>
+                        </div>
+                    `;
+                    updateMemberCount();
+                    updateSDGCount();
+                    
+                } else {
+                    // Show validation errors
+                    if (data.errors && data.errors.length > 0) {
+                        errorList.innerHTML = data.errors.map(error => `<li>${error}</li>`).join('');
+                        errorMessage.style.display = 'block';
+                        errorMessage.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        errorList.innerHTML = `<li>${data.message || 'An error occurred. Please try again.'}</li>`;
+                        errorMessage.style.display = 'block';
+                        errorMessage.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Submission error:', error);
+                errorList.innerHTML = `<li>Network error. Please check your connection and try again.</li>`;
+                errorMessage.style.display = 'block';
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+            })
+            .finally(() => {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit MVP';
-            }, 1500);
+            });
         });
 
+        // Initialize member count display
         updateMemberCount();
 
+        // Animated title functionality
         function animateTitle() {
             const animatedElement = document.getElementById('animatedPart');
             const staticElement = document.getElementById('staticPart');
             const fullText = 'Future Tech Hackathon';
             let currentText = fullText;
             
+            // Start the animation cycle
             function startCycle() {
                 animatedElement.className = 'deleting';
                 deleteText();
@@ -913,10 +991,12 @@ For inquiries: cosaku10@gmail.com
             
             function deleteText() {
                 if (currentText.length > 0) {
+                    // Delete character by character from the end
                     currentText = currentText.slice(0, -1);
                     animatedElement.textContent = currentText;
                     setTimeout(deleteText, 50); // Speed of deletion
                 } else {
+                    // Start typing after a brief pause
                     setTimeout(typeText, 300);
                 }
             }
@@ -924,10 +1004,12 @@ For inquiries: cosaku10@gmail.com
             function typeText() {
                 animatedElement.className = 'typewriter';
                 if (currentText.length < fullText.length) {
+                    // Add character by character from the beginning
                     currentText = fullText.slice(0, currentText.length + 1);
                     animatedElement.textContent = currentText;
                     setTimeout(typeText, 80); // Speed of typing
                 } else {
+                    // Complete cycle, wait before starting over
                     setTimeout(() => {
                         animatedElement.className = '';
                         setTimeout(startCycle, 3000); // Wait 3 seconds before next cycle
@@ -935,17 +1017,21 @@ For inquiries: cosaku10@gmail.com
                 }
             }
             
+            // Start the first cycle after page load
             setTimeout(startCycle, 2000);
         }
 
+        // Start title animation when page loads
         window.addEventListener('load', animateTitle);
 
+        // SDG checkbox counter
         function updateSDGCount() {
             const checkboxes = document.querySelectorAll('input[name="unsdgGoals"]:checked');
             const count = checkboxes.length;
             document.getElementById('sdgCount').textContent = `Selected: ${count} goal${count !== 1 ? 's' : ''}`;
         }
 
+        // Add event listeners to SDG checkboxes
         document.addEventListener('DOMContentLoaded', function() {
             const sdgCheckboxes = document.querySelectorAll('input[name="unsdgGoals"]');
             sdgCheckboxes.forEach(checkbox => {
