@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Tech Hackathon MVP Submission - FOCLIS, Kabale University</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #F7F3EC;
+            color: #4B0082;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #4B0082, #7B0323);
+            color: #F7F3EC;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(75, 0, 130, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            min-height: 1.2em;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #D4AF37;
+            animation: blink-cursor 1s infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 50% { border-color: #D4AF37; }
+            51%, 100% { border-color: transparent; }
+        }
+
+        .deleting {
+            border-right: 3px solid #D4AF37;
+        }
+
+        .header .theme {
+            font-size: 1.2em;
+            color: #D4AF37;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .subtheme {
+            font-size: 1em;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(75, 0, 130, 0.1);
+            border: 2px solid #D4AF37;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #4B0082;
+            font-size: 1.1em;
+        }
+
+        .required {
+            color: #7B0323;
+        }
+
+        input[type="text"], 
+        input[type="email"], 
+        input[type="url"], 
+        textarea, 
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background-color: #F7F3EC;
+        }
+
+        input[type="text"]:focus, 
+        input[type="email"]:focus, 
+        input[type="url"]:focus, 
+        textarea:focus, 
+        select:focus {
+            outline: none;
+            border-color: #4B0082;
+            box-shadow: 0 0 10px rgba(75, 0, 130, 0.3);
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .team-members-container {
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #F7F3EC;
+        }
+
+        .team-member {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+
+        .team-member input {
+            flex: 1;
+        }
+
+        .remove-member {
+            background-color: #7B0323;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-member:hover {
+            background-color: #5a0219;
+        }
+
+        .add-member {
+            background-color: #D4AF37;
+            color: #4B0082;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .add-member:hover {
+            background-color: #b8941f;
+            transform: translateY(-2px);
+        }
+
+        .add-member:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4B0082, #7B0323);
+            color: #F7F3EC;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(75, 0, 130, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            display: none;
+        }
+
+        .error-message ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+
+        .error-message li {
+            margin: 5px 0;
+        }
+
+        .sdg-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #F7F3EC;
+        }
+
+        .sdg-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        .sdg-item:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .sdg-item input[type="checkbox"] {
+            margin: 0;
+            transform: scale(1.2);
+            accent-color: #4B0082;
+        }
+
+        .sdg-item label {
+            margin: 0;
+            font-size: 0.95em;
+            font-weight: normal;
+            color: #4B0082;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .sdg-selected-count {
+            color: #7B0323;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .member-count {
+            color: #7B0323;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        /* Mobile First - Small devices (phones) */
+        @media (max-width: 480px) {
+            .container {
+                padding: 5px;
+            }
+            
+            .header {
+                padding: 20px 10px;
+                margin-bottom: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.6em;
+                line-height: 1.3;
+                margin-bottom: 15px;
+            }
+            
+            .header h1 #staticPart {
+                display: block;
+                margin-top: 5px;
+                font-size: 0.85em;
+            }
+            
+            .header .organizer {
+                font-size: 0.9em;
+            }
+            
+            .header .theme {
+                font-size: 1em;
+            }
+            
+            .header .subtheme {
+                font-size: 0.85em;
+                line-height: 1.4;
+            }
+            
+            .form-container {
+                padding: 15px;
+                border-radius: 10px;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            label {
+                font-size: 1em;
+                margin-bottom: 6px;
+            }
+            
+            input[type="text"], 
+            input[type="email"], 
+            input[type="url"], 
+            textarea, 
+            select {
+                padding: 10px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                border-radius: 6px;
+            }
+            
+            textarea {
+                height: 100px;
+            }
+            
+            .team-members-container {
+                padding: 15px;
+            }
+            
+            .team-member {
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+            
+            .remove-member {
+                padding: 10px 12px;
+                font-size: 0.9em;
+            }
+            
+            .add-member {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+            
+            .sdg-container {
+                grid-template-columns: 1fr;
+                max-height: 250px;
+                padding: 10px;
+            }
+            
+            .sdg-item {
+                padding: 6px;
+            }
+            
+            .sdg-item label {
+                font-size: 0.85em;
+                line-height: 1.3;
+            }
+            
+            .submit-btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            
+            .success-message,
+            .error-message {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Medium devices (tablets) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 30px 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+                margin-bottom: 12px;
+            }
+            
+            .header h1 #staticPart {
+                font-size: 0.9em;
+            }
+            
+            .header .organizer {
+                font-size: 1em;
+            }
+            
+            .header .theme {
+                font-size: 1.1em;
+            }
+            
+            .header .subtheme {
+                font-size: 0.95em;
+            }
+            
+            .form-container {
+                padding: 25px;
+            }
+            
+            input[type="text"], 
+            input[type="email"], 
+            input[type="url"], 
+            textarea, 
+            select {
+                padding: 11px;
+                font-size: 16px;
+            }
+            
+            .team-member {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .sdg-container {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                max-height: 280px;
+            }
+            
+            .sdg-item label {
+                font-size: 0.9em;
+            }
+        }
+
+        /* Large tablets and small laptops */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                max-width: 900px;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2.3em;
+            }
+            
+            .form-container {
+                padding: 35px;
+            }
+            
+            .sdg-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        /* Large screens */
+        @media (min-width: 1025px) {
+            .container {
+                max-width: 1000px;
+            }
+            
+            .header h1 {
+                font-size: 2.8em;
+            }
+            
+            .form-container {
+                padding: 50px;
+            }
+        }
+
+        /* Landscape orientation for mobile devices */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .header {
+                padding: 15px 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header .organizer,
+            .header .theme,
+            .header .subtheme {
+                font-size: 0.9em;
+            }
+            
+            .sdg-container {
+                max-height: 200px;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .submit-btn:hover,
+            .add-member:hover,
+            .remove-member:hover,
+            .sdg-item:hover {
+                transform: none;
+            }
+            
+            .submit-btn:active {
+                transform: scale(0.98);
+            }
+            
+            .add-member:active,
+            .remove-member:active {
+                transform: scale(0.95);
+            }
+            
+            input[type="text"]:focus, 
+            input[type="email"]:focus, 
+            input[type="url"]:focus, 
+            textarea:focus {
+                transform: scale(1.02);
+                transition: transform 0.2s ease;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .header {
+                background: none !important;
+                color: #000 !important;
+                box-shadow: none;
+            }
+            
+            .form-container {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            
+            .submit-btn,
+            .add-member,
+            .remove-member {
+                display: none;
+            }
+            
+            .success-message,
+            .error-message {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="animatedTitle">
+                <span id="animatedPart">Future Tech Hackathon</span>
+                <span id="staticPart" style="color: #D4AF37; font-weight: bold;"> MVP Submission</span>
+            </h1>
+            <div class="organizer" style="font-size: 1.1em; color: #D4AF37; margin-bottom: 15px; font-weight: bold;">
+                Organized by FOCLIS - Faculty of Computing and Library Information Science<br>
+                Kabale University<br>
+                <span style="font-size: 0.9em; font-style: italic; opacity: 0.9;">(Minimal Viable Product Submission)</span>
+            </div>
+            <div class="theme">Digital Frontiers: "Driving Change Through Technology and Information"</div>
+            <div class="subtheme">Exploring Emerging Technologies to Shape Smarter, More Inclusive Communities in Alignment with the UN Sustainable Development Goals</div>
+        </div>
+
+        <div class="form-container">
+            <div class="success-message" id="successMessage">
+                <strong>Submission Successful!</strong><br>
+                Your MVP details have been sent to FOCLIS successfully. You will receive a confirmation email shortly.<br>
+                <strong>FOCLIS - Faculty of Computing and Library Information Science, Kabale University</strong><br>
+                <strong>For inquiries, contact:</strong> cosaku10@gmail.com
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <strong>Please complete the following required fields:</strong>
+                <ul id="errorList"></ul>
+            </div>
+
+            <form id="mvpForm">
+                <div class="form-group">
+                    <label for="teamName">Team Name <span class="required">*</span></label>
+                    <input type="text" id="teamName" name="teamName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="projectTitle">Project Title <span class="required">*</span></label>
+                    <input type="text" id="projectTitle" name="projectTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="projectBackground">Project Background <span class="required">*</span></label>
+                    <textarea id="projectBackground" name="projectBackground" placeholder="Clearly describe the background and context of your project..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="problemStatement">Problem Statement <span class="required">*</span></label>
+                    <textarea id="problemStatement" name="problemStatement" placeholder="Clearly define the problem your project addresses..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="unsdgGoals">UN Sustainable Development Goals <span class="required">*</span></label>
+                    <p style="margin-bottom: 15px; color: #4B0082; font-size: 0.95em;">Select the SDG goals that align with your project:</p>
+                    <div class="sdg-container" id="sdgContainer">
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg1" name="unsdgGoals" value="1. No Poverty">
+                            <label for="sdg1">1. No Poverty - End poverty in all its forms everywhere</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg2" name="unsdgGoals" value="2. Zero Hunger">
+                            <label for="sdg2">2. Zero Hunger - End hunger, achieve food security and improved nutrition</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg3" name="unsdgGoals" value="3. Good Health and Well-being">
+                            <label for="sdg3">3. Good Health and Well-being - Ensure healthy lives and promote well-being</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg4" name="unsdgGoals" value="4. Quality Education">
+                            <label for="sdg4">4. Quality Education - Ensure inclusive and equitable quality education</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg5" name="unsdgGoals" value="5. Gender Equality">
+                            <label for="sdg5">5. Gender Equality - Achieve gender equality and empower all women and girls</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg6" name="unsdgGoals" value="6. Clean Water and Sanitation">
+                            <label for="sdg6">6. Clean Water and Sanitation - Ensure availability and sustainable management</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg7" name="unsdgGoals" value="7. Affordable and Clean Energy">
+                            <label for="sdg7">7. Affordable and Clean Energy - Ensure access to affordable, reliable, sustainable energy</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg8" name="unsdgGoals" value="8. Decent Work and Economic Growth">
+                            <label for="sdg8">8. Decent Work and Economic Growth - Promote sustained, inclusive economic growth</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg9" name="unsdgGoals" value="9. Industry, Innovation and Infrastructure">
+                            <label for="sdg9">9. Industry, Innovation and Infrastructure - Build resilient infrastructure</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg10" name="unsdgGoals" value="10. Reduced Inequalities">
+                            <label for="sdg10">10. Reduced Inequalities - Reduce inequality within and among countries</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg11" name="unsdgGoals" value="11. Sustainable Cities and Communities">
+                            <label for="sdg11">11. Sustainable Cities and Communities - Make cities and settlements inclusive</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg12" name="unsdgGoals" value="12. Responsible Consumption and Production">
+                            <label for="sdg12">12. Responsible Consumption and Production - Ensure sustainable consumption patterns</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg13" name="unsdgGoals" value="13. Climate Action">
+                            <label for="sdg13">13. Climate Action - Take urgent action to combat climate change</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg14" name="unsdgGoals" value="14. Life Below Water">
+                            <label for="sdg14">14. Life Below Water - Conserve and sustainably use the oceans, seas</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg15" name="unsdgGoals" value="15. Life on Land">
+                            <label for="sdg15">15. Life on Land - Protect, restore and promote sustainable use of ecosystems</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg16" name="unsdgGoals" value="16. Peace, Justice and Strong Institutions">
+                            <label for="sdg16">16. Peace, Justice and Strong Institutions - Promote peaceful and inclusive societies</label>
+                        </div>
+                        <div class="sdg-item">
+                            <input type="checkbox" id="sdg17" name="unsdgGoals" value="17. Partnerships for the Goals">
+                            <label for="sdg17">17. Partnerships for the Goals - Strengthen means of implementation and partnerships</label>
+                        </div>
+                    </div>
+                    <div class="sdg-selected-count" id="sdgCount">Selected: 0 goals</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Team Members <span class="required">*</span> (Maximum 5 members)</label>
+                    <div class="team-members-container">
+                        <div id="teamMembersContainer">
+                            <div class="team-member">
+                                <input type="text" name="teamMember" placeholder="Enter team member name" required>
+                                <button type="button" class="remove-member" onclick="removeMember(this)">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-member" id="addMemberBtn" onclick="addMember()">Add Team Member</button>
+                        <div class="member-count" id="memberCount">Current members: 1/5</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="youtubeLink">YouTube Link <span class="required">*</span></label>
+                    <input type="url" id="youtubeLink" name="youtubeLink" placeholder="https://youtube.com/watch?v=..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="githubRepo">GitHub Repository <span class="required">*</span></label>
+                    <input type="url" id="githubRepo" name="githubRepo" placeholder="https://github.com/username/repository" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit MVP</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let memberCount = 1;
+        const maxMembers = 5;
+
+        function addMember() {
+            if (memberCount < maxMembers) {
+                memberCount++;
+                const container = document.getElementById('teamMembersContainer');
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'team-member';
+                memberDiv.innerHTML = `
+                    <input type="text" name="teamMember" placeholder="Enter team member name" required>
+                    <button type="button" class="remove-member" onclick="removeMember(this)">Remove</button>
+                `;
+                container.appendChild(memberDiv);
+                updateMemberCount();
+            }
+        }
+
+        function removeMember(button) {
+            if (memberCount > 1) {
+                button.parentElement.remove();
+                memberCount--;
+                updateMemberCount();
+            }
+        }
+
+        function updateMemberCount() {
+            document.getElementById('memberCount').textContent = `Current members: ${memberCount}/5`;
+            const addBtn = document.getElementById('addMemberBtn');
+            addBtn.disabled = memberCount >= maxMembers;
+        }
+
+        function validateForm() {
+            const form = document.getElementById('mvpForm');
+            const formData = new FormData(form);
+            const errors = [];
+            
+            if (!formData.get('teamName') || formData.get('teamName').trim() === '') {
+                errors.push('Team Name');
+            }
+            
+            if (!formData.get('projectTitle') || formData.get('projectTitle').trim() === '') {
+                errors.push('Project Title');
+            }
+            
+            if (!formData.get('projectBackground') || formData.get('projectBackground').trim() === '') {
+                errors.push('Project Background');
+            }
+            
+            if (!formData.get('problemStatement') || formData.get('problemStatement').trim() === '') {
+                errors.push('Problem Statement');
+            }
+
+            const selectedSDGs = formData.getAll('unsdgGoals');
+            if (selectedSDGs.length === 0) {
+                errors.push('UN Sustainable Development Goals (select at least one)');
+            }
+
+            const teamMembers = formData.getAll('teamMember');
+            const validMembers = teamMembers.filter(member => member && member.trim() !== '');
+            if (validMembers.length === 0) {
+                errors.push('Team Members (at least one member required)');
+            }
+
+            const youtubeUrl = formData.get('youtubeLink');
+            if (!youtubeUrl || youtubeUrl.trim() === '') {
+                errors.push('YouTube Link');
+            } else if (!youtubeUrl.includes('youtube.com') && !youtubeUrl.includes('youtu.be')) {
+                errors.push('YouTube Link (must be a valid YouTube URL)');
+            }
+
+            const githubUrl = formData.get('githubRepo');
+            if (!githubUrl || githubUrl.trim() === '') {
+                errors.push('GitHub Repository');
+            } else if (!githubUrl.includes('github.com')) {
+                errors.push('GitHub Repository (must be a valid GitHub URL)');
+            }
+
+            const errorMessage = document.getElementById('errorMessage');
+            const errorList = document.getElementById('errorList');
+            
+            if (errors.length > 0) {
+                errorList.innerHTML = errors.map(error => `<li>${error}</li>`).join('');
+                errorMessage.style.display = 'block';
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+                return false;
+            }
+
+            return true;
+        }
+
+        function createEmailBody(formData) {
+            const teamMembers = formData.getAll('teamMember').filter(member => member && member.trim() !== '');
+            const selectedSDGs = formData.getAll('unsdgGoals');
+            
+            return `
+FUTURE TECH HACKATHON - MVP SUBMISSION
+Organized by FOCLIS - Faculty of Computing and Library Information Science
+Kabale University
+
+Team Name: ${formData.get('teamName')}
+Project Title: ${formData.get('projectTitle')}
+
+PROJECT BACKGROUND:
+${formData.get('projectBackground')}
+
+PROBLEM STATEMENT:
+${formData.get('problemStatement')}
+
+UN SUSTAINABLE DEVELOPMENT GOALS:
+${selectedSDGs.map((sdg, index) => `${index + 1}. ${sdg}`).join('\n')}
+
+TEAM MEMBERS:
+${teamMembers.map((member, index) => `${index + 1}. ${member}`).join('\n')}
+
+LINKS:
+YouTube: ${formData.get('youtubeLink')}
+GitHub Repository: ${formData.get('githubRepo')}
+
+---
+FOCLIS - Faculty of Computing and Library Information Science
+Kabale University
+For inquiries: cosaku10@gmail.com
+            `.trim();
+        }
+
+        document.getElementById('mvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            if (!validateForm()) {
+                errorMessage.style.display = 'block';
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const formData = new FormData(this);
+            const emailBody = createEmailBody(formData);
+
+            setTimeout(() => {
+                // Creatngg mailto link for fallback
+                const subject = encodeURIComponent(`MVP Submission - ${formData.get('teamName')} - ${formData.get('projectTitle')}`);
+                const body = encodeURIComponent(emailBody);
+                const mailtoLink = `mailto:cosaku10@gmail.com?subject=${subject}&body=${body}`;
+                
+                window.location.href = mailtoLink;
+                
+                successMessage.style.display = 'block';
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+                
+                this.reset();
+                
+                memberCount = 1;
+                const container = document.getElementById('teamMembersContainer');
+                container.innerHTML = `
+                    <div class="team-member">
+                        <input type="text" name="teamMember" placeholder="Enter team member name" required>
+                        <button type="button" class="remove-member" onclick="removeMember(this)">Remove</button>
+                    </div>
+                `;
+                updateMemberCount();
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit MVP';
+            }, 1500);
+        });
+
+        updateMemberCount();
+
+        function animateTitle() {
+            const animatedElement = document.getElementById('animatedPart');
+            const staticElement = document.getElementById('staticPart');
+            const fullText = 'Future Tech Hackathon';
+            let currentText = fullText;
+            
+            function startCycle() {
+                animatedElement.className = 'deleting';
+                deleteText();
+            }
+            
+            function deleteText() {
+                if (currentText.length > 0) {
+                    currentText = currentText.slice(0, -1);
+                    animatedElement.textContent = currentText;
+                    setTimeout(deleteText, 50); // Speed of deletion
+                } else {
+                    setTimeout(typeText, 300);
+                }
+            }
+            
+            function typeText() {
+                animatedElement.className = 'typewriter';
+                if (currentText.length < fullText.length) {
+                    currentText = fullText.slice(0, currentText.length + 1);
+                    animatedElement.textContent = currentText;
+                    setTimeout(typeText, 80); // Speed of typing
+                } else {
+                    setTimeout(() => {
+                        animatedElement.className = '';
+                        setTimeout(startCycle, 3000); // Wait 3 seconds before next cycle
+                    }, 1000);
+                }
+            }
+            
+            setTimeout(startCycle, 2000);
+        }
+
+        window.addEventListener('load', animateTitle);
+
+        function updateSDGCount() {
+            const checkboxes = document.querySelectorAll('input[name="unsdgGoals"]:checked');
+            const count = checkboxes.length;
+            document.getElementById('sdgCount').textContent = `Selected: ${count} goal${count !== 1 ? 's' : ''}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sdgCheckboxes = document.querySelectorAll('input[name="unsdgGoals"]');
+            sdgCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSDGCount);
+            });
+        });
+    </script>
+</body>
+</html>
